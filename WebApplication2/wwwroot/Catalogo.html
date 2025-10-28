@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tienda de Accesorios para Perros</title>
+    <link rel="stylesheet" href="/Css/Catalogo.css"/>
+</head>
+<body>
+
+    <header class="navbar">
+        <input type="text" id="buscador" placeholder="Buscar productos...">
+        <nav>
+            <a href="categorias.html">Categorias</a>
+            <a href="index.html">Inicio</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Los productos se cargan dinámicamente -->
+    </main>
+
+    <script>
+        // Variable global para almacenar todos los productos
+        let todosLosProductos = [];
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const params = new URLSearchParams(window.location.search);
+            const categoria = params.get("categoria");
+
+            const container = document.querySelector(".container");
+            container.innerHTML = "<p>Cargando productos...</p>";
+
+            try {
+                const API_URL = "https://localhost:7047/api/Productos";
+                const url = categoria
+                    ? `${API_URL}/mostrarporcategoria/${encodeURIComponent(categoria)}`
+                    : `${API_URL}/mostrarproductos`;
+
+                const res = await fetch(url);
+                if (!res.ok) throw new Error("Error al cargar productos");
+
+                const productos = await res.json();
+                todosLosProductos = productos; // Guardar para la búsqueda
+
+                container.innerHTML = ""; // Limpiar
+
+                if (productos.length === 0) {
+                    container.innerHTML = "<p>No hay productos disponibles para esta categoría.</p>";
+                    return;
+                }
+
+                mostrarProductos(productos);
+
+                // Configurar el buscador
+                configurarBuscador();
+
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = "<p>Error al cargar los productos.</p>";
+            }
+        });
+
+        // Función para mostrar productos
+        function mostrarProductos(productos) {
+            const container = document.querySelector(".container");
+            container.innerHTML = "";
+
+            productos.forEach(p => {
+                const card = document.createElement("div");
+                card.classList.add("product-card");
+                card.innerHTML = `
+                        <img src="${p.imagenUrl || 'Imagenes/default.jpg'}" alt="${p.nombre_Articulo}">
+                        <div class="product-title">${p.nombre_Articulo}</div>
+                        <div class="product-price">$${Number(p.precio).toFixed(2)}</div>
+                        <button class="btn-carrito" data-id="${p.iD_Articulo}" data-nombre="${p.nombre_Articulo}" data-precio="${p.precio}" data-imagen="${p.imagenUrl || 'Imagenes/default.jpg'}">
+                            Añadir al carrito
+                        </button>
+                    `;
+                container.appendChild(card);
+            });
+
+            // Agregar eventos a los botones del carrito
+            document.querySelectorAll('.btn-carrito').forEach(btn => {
+                btn.addEventListener('click', agregarAlCarrito);
+            });
+        }
+
+        // Función para agregar al carrito
+        function agregarAlCarrito(event) {
+            const boton = event.target;
+            const producto = {
+                id: boton.dataset.id,
+                nombre: boton.dataset.nombre,
+                precio: parseFloat(boton.dataset.precio),
+                imagen: boton.dataset.imagen,
+                cantidad: 1
+            };
+
+            // Obtener carrito actual de localStorage
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+            // Verificar si el producto ya está en el carrito
+            const productoExistente = carrito.find(item => item.id === producto.id);
+
+            if (productoExistente) {
+                productoExistente.cantidad += 1;
+            } else {
+                carrito.push(producto);
+            }
+
+            // Guardar en localStorage
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+
+            // Feedback visual
+            boton.textContent = '✓ Añadido';
+            boton.style.backgroundColor = '#28a745';
+
+            setTimeout(() => {
+                boton.textContent = 'Añadir al carrito';
+                boton.style.backgroundColor = '';
+            }, 1500);
+
+            console.log('Producto añadido:', producto);
+            console.log('Carrito actual:', carrito);
+        }
+
+        // Función para configurar la búsqueda
+        function configurarBuscador() {
+            const buscador = document.getElementById('buscador');
+
+            buscador.addEventListener('input', function (e) {
+                const termino = e.target.value.toLowerCase().trim();
+
+                if (termino === '') {
+                    // Si no hay término, mostrar todos los productos
+                    mostrarProductos(todosLosProductos);
+                    return;
+                }
+
+                // Filtrar productos
+                const productosFiltrados = todosLosProductos.filter(producto =>
+                    producto.nombre_Articulo.toLowerCase().includes(termino)
+                );
+
+                mostrarProductos(productosFiltrados);
+
+                // Mostrar mensaje si no hay resultados
+                if (productosFiltrados.length === 0) {
+                    const container = document.querySelector(".container");
+                    container.innerHTML = `<p>No se encontraron productos que coincidan con "${termino}"</p>`;
+                }
+            });
+
+            // Buscar al presionar Enter
+            buscador.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    const termino = e.target.value.toLowerCase().trim();
+                    const productosFiltrados = todosLosProductos.filter(producto =>
+                        producto.nombre_Articulo.toLowerCase().includes(termino)
+                    );
+                    mostrarProductos(productosFiltrados);
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

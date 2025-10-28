@@ -1,0 +1,177 @@
+/* Reset y tipografía base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #ffe0c7;
+    color: #333;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #ff8c42, #ffb86b);
+    padding: 15px 60px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+    .navbar nav a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        margin-left: 25px;
+        transition: color 0.3s, transform 0.2s;
+    }
+
+        .navbar nav a:hover {
+            color: #3a1d0e;
+            transform: scale(1.05);
+        }
+
+/* Barra de búsqueda */
+header {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+    header input[type="text"] {
+        width: 50%;
+        padding: 12px 20px;
+        border-radius: 30px;
+        border: 2px solid #ff8c42;
+        font-size: 16px;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+        header input[type="text"]:focus {
+            border-color: #ff7b00;
+            box-shadow: 0 0 8px rgba(255, 123, 0, 0.3);
+        }
+
+/* Contenedor de productos - MODIFICADO */
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 220px)); /* Tamaño fijo */
+    gap: 25px;
+    padding: 30px 60px;
+    justify-content: center; /* Centra las tarjetas */
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Tarjeta de producto - MODIFICADO */
+.product-card {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    overflow: hidden;
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    width: 220px; /* Ancho fijo */
+    height: 350px; /* Alto fijo para consistencia */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+    .product-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+    }
+
+    /* Imagen del producto - MODIFICADO */
+    .product-card img {
+        width: 100%;
+        height: 150px; /* Alto fijo para imágenes */
+        object-fit: contain;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        flex-shrink: 0; /* Evita que la imagen se encoja */
+    }
+
+/* Contenedor de texto - NUEVO */
+.product-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Título y precio */
+.product-title {
+    font-weight: 600;
+    color: #3a1d0e;
+    margin-bottom: 8px;
+    font-size: 15px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limita a 2 líneas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-price {
+    color: #ff7b00;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* Botón de ver más (opcional para añadir debajo de cada producto) */
+.btn-vermas {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff8c42, #ffb86b);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.3s, background 0.3s;
+}
+
+    .btn-vermas:hover {
+        background: linear-gradient(90deg, #ff7b00, #ff9c50);
+        transform: scale(1.05);
+    }
+
+/* Estilos para el botón de carrito */
+.btn-carrito {
+    background-color: #2e4a67;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+    font-size: 14px;
+    flex-shrink: 0; /* Evita que el botón se encoja */
+}
+
+    .btn-carrito:hover {
+        background-color: #1e364f;
+        transform: translateY(-2px);
+    }
+
+    .btn-carrito:active {
+        transform: translateY(0);
+    }
+
+/* Mensaje cuando no hay productos */
+.container p {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    grid-column: 1 / -1; /* Ocupa todas las columnas */
+    padding: 40px;
+}

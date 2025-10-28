@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel Administrador - Norteñito Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/Css/admin.css">
+</head>
+<body>
+    <header class="navbar">
+        <h1 class="logo">🐾 El Norteño Store</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+        </nav>
+    </header>
+
+    <h1>Productos</h1>
+    <div class="form-container">
+        <h2>Agregar Producto</h2>
+        <!-- CAMBIO: Agregar enctype="multipart/form-data" -->
+        <form id="formProducto" enctype="multipart/form-data">
+            <label for="nombre">Nombre del producto</label>
+            <input type="text" id="nombre" required>
+
+            <label for="precio">Precio</label>
+            <input type="number" id="precio" required min="0" step="0.01">
+
+            <label for="categoria">Categoría</label>
+            <select id="categoria" required>
+                <option value="">Selecciona una categoría</option>
+            </select>
+
+            <label for="stock">Stock disponible</label>
+            <input type="number" id="stock" required min="0">
+
+            <!-- NUEVO: Campo para imagen -->
+            <label for="imagen">Imagen del producto</label>
+            <input type="file" id="imagen" accept="image/*" required>
+
+            <button type="submit">Agregar producto</button>
+        </form>
+    </div>
+
+    <div class="crud-container">
+        <h2>Inventario de Productos</h2>
+        <table id="tablaProductos">
+            <thead>
+                <tr>
+                    <!-- NUEVO: Columna para imagen -->
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Categoría</th>
+                    <th>Stock</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Productos cargados dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tablaBody = document.querySelector("#tablaProductos tbody");
+            const formProducto = document.getElementById("formProducto");
+            const selectCategoria = document.getElementById("categoria");
+            const API_URL = "https://localhost:7047/api/Productos";
+
+            // Categorías definidas
+            const categorias = [
+                { id: 6, nombre: "Ave" },
+                { id: 7, nombre: "Conejo" },
+                { id: 1, nombre: "Electrónica" },
+                { id: 5, nombre: "Gato" },
+                { id: 8, nombre: "Hamsters" },
+                { id: 3, nombre: "Hogar" },
+                { id: 4, nombre: "Perro" },
+                { id: 2, nombre: "Ropa" }
+            ];
+
+            // Llenar el select de categorías del formulario
+            categorias.forEach(c => {
+                const opt = document.createElement("option");
+                opt.value = c.nombre;
+                opt.textContent = c.nombre;
+                selectCategoria.appendChild(opt);
+            });
+
+            // Cargar productos
+            const cargarProductos = async () => {
+                tablaBody.innerHTML = "";
+                try {
+                    const res = await fetch(`${API_URL}/mostrarproductos`);
+                    if (!res.ok) throw new Error("Error al cargar productos");
+                    const productos = await res.json();
+
+                    productos.forEach(p => {
+                        const row = document.createElement("tr");
+                        row.dataset.id = p.iD_Articulo;
+                        row.innerHTML = `
+                      <!-- NUEVO: Mostrar imagen en la tabla -->
+                      <td class="imagen">
+                        <img src="${p.imagenUrl || 'Imagenes/default.jpg'}"
+                             alt="${p.nombre_Articulo}"
+                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                      </td>
+                      <td class="nombre">${p.nombre_Articulo}</td>
+                      <td class="precio">${Number(p.precio || 0).toFixed(2)}</td>
+                      <td class="categoria">${p.categoria?.nombre_Categoria || "Sin categoría"}</td>
+                      <td class="stock">${Number(p.stock || 0)}</td>
+                      <td class="acciones">
+                        <button class="editar">Editar</button>
+                        <button class="borrar">Borrar</button>
+                      </td>
+                    `;
+                        tablaBody.appendChild(row);
+                    });
+
+                    // Asignar eventos
+                    document.querySelectorAll(".editar").forEach(btn => {
+                        btn.addEventListener("click", (e) => iniciarEdicion(e, productos));
+                    });
+                    document.querySelectorAll(".borrar").forEach(btn => {
+                        btn.addEventListener("click", borrarProducto);
+                    });
+
+                } catch (error) {
+                    console.error("Error al cargar productos:", error);
+                    alert("No se pudieron cargar los productos");
+                }
+            };
+
+            // Iniciar edición en línea - MODIFICADO para incluir imagen
+            const iniciarEdicion = (event, productos) => {
+                const row = event.target.closest("tr");
+                const id = row.dataset.id;
+                const producto = productos.find(p => p.iD_Articulo == id);
+                if (!producto) return;
+
+                const original = {
+                    nombre: row.querySelector(".nombre").textContent,
+                    precio: row.querySelector(".precio").textContent,
+                    categoria: row.querySelector(".categoria").textContent,
+                    stock: row.querySelector(".stock").textContent,
+                    imagen: row.querySelector(".imagen").innerHTML
+                };
+
+                row.querySelector(".nombre").innerHTML = `<input type="text" value="${producto.nombre_Articulo}" />`;
+                row.querySelector(".precio").innerHTML = `<input type="number" step="0.01" value="${producto.precio}" />`;
+
+                let selectHtml = `<select>`;
+                categorias.forEach(c => {
+                    const selected = (c.nombre === producto.categoria?.nombre_Categoria) ? "selected" : "";
+                    selectHtml += `<option value="${c.nombre}" ${selected}>${c.nombre}</option>`;
+                });
+                selectHtml += `</select>`;
+                row.querySelector(".categoria").innerHTML = selectHtml;
+
+                row.querySelector(".stock").innerHTML = `<input type="number" value="${producto.stock}" />`;
+
+                // NUEVO: Campo para cambiar imagen en edición
+                row.querySelector(".imagen").innerHTML = `
+                      <div style="text-align: center;">
+                        <img src="${producto.imagenUrl || 'Imagenes/default.jpg'}"
+                             alt="${producto.nombre_Articulo}"
+                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; margin-bottom: 5px;">
+                        <br>
+                        <input type="file" accept="image/*" style="font-size: 12px;">
+                        <div style="font-size: 11px; color: #666;">Cambiar imagen</div>
+                      </div>
+                    `;
+
+                const acciones = row.querySelector(".acciones");
+                acciones.innerHTML = `
+                  <button class="guardar">Guardar</button>
+                  <button class="cancelar">Cancelar</button>
+                `;
+
+                acciones.querySelector(".cancelar").addEventListener("click", () => {
+                    row.querySelector(".nombre").textContent = original.nombre;
+                    row.querySelector(".precio").textContent = Number(original.precio).toFixed(2);
+                    row.querySelector(".categoria").textContent = original.categoria;
+                    row.querySelector(".stock").textContent = original.stock;
+                    row.querySelector(".imagen").innerHTML = original.imagen;
+                    acciones.innerHTML = `<button class="editar">Editar</button><button class="borrar">Borrar</button>`;
+                });
+
+                acciones.querySelector(".guardar").addEventListener("click", async () => {
+                    const nuevoNombre = row.querySelector(".nombre input").value.trim();
+                    const nuevoPrecio = parseFloat(row.querySelector(".precio input").value);
+                    const nuevaCategoria = row.querySelector(".categoria select").value;
+                    const nuevoStock = parseInt(row.querySelector(".stock input").value);
+                    const nuevaImagen = row.querySelector(".imagen input[type='file']").files[0];
+
+                    if (!nuevoNombre || isNaN(nuevoPrecio) || !nuevaCategoria || isNaN(nuevoStock)) {
+                        alert("Datos inválidos");
+                        return;
+                    }
+
+                    // CAMBIO: Usar FormData en lugar de JSON
+                    const formData = new FormData();
+                    formData.append("nombre", nuevoNombre);
+                    formData.append("precio", nuevoPrecio);
+                    formData.append("stock", nuevoStock);
+                    formData.append("nombreCategoria", nuevaCategoria);
+
+                    if (nuevaImagen) {
+                        formData.append("imagen", nuevaImagen);
+                    }
+
+                    try {
+                        const res = await fetch(`${API_URL}/editarproducto/${id}`, {
+                            method: "PUT",
+                            body: formData // CAMBIO: No usar headers Content-Type con FormData
+                        });
+                        if (res.ok) {
+                            alert("Producto actualizado correctamente");
+                            cargarProductos();
+                        } else {
+                            const err = await res.text();
+                            alert("Error al actualizar: " + err);
+                        }
+                    } catch (error) {
+                        console.error("Error al actualizar producto:", error);
+                        alert("No se pudo actualizar el producto");
+                    }
+                });
+            };
+
+            // Borrar producto
+            const borrarProducto = async (e) => {
+                const id = e.target.closest("tr").dataset.id;
+                if (!confirm("¿Deseas eliminar este producto?")) return;
+                try {
+                    const resDel = await fetch(`${API_URL}/borrarproducto/${id}`, { method: "DELETE" });
+                    if (resDel.ok) {
+                        alert("Producto eliminado correctamente");
+                        cargarProductos();
+                    } else {
+                        const err = await resDel.text();
+                        alert("Error al eliminar: " + err);
+                    }
+                } catch (error) {
+                    console.error("Error al borrar producto:", error);
+                    alert("No se pudo eliminar el producto");
+                }
+            };
+
+            // Crear producto - MODIFICADO para usar FormData
+            formProducto.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const nombre = document.getElementById("nombre").value.trim();
+                const precio = parseFloat(document.getElementById("precio").value);
+                const categoria = document.getElementById("categoria").value;
+                const stock = parseInt(document.getElementById("stock").value);
+                const imagen = document.getElementById("imagen").files[0]; // NUEVO
+
+                if (!nombre || isNaN(precio) || !categoria || isNaN(stock) || !imagen) {
+                    alert("Por favor llena todos los campos correctamente, incluyendo la imagen");
+                    return;
+                }
+
+                // CAMBIO: Usar FormData en lugar de JSON
+                const formData = new FormData();
+                formData.append("nombre", nombre);
+                formData.append("precio", precio);
+                formData.append("stock", stock);
+                formData.append("nombreCategoria", categoria);
+                formData.append("imagen", imagen);
+
+                try {
+                    const res = await fetch(`${API_URL}/crearnuevoproducto`, {
+                        method: "POST",
+                        body: formData // CAMBIO: No usar headers Content-Type con FormData
+                    });
+
+                    if (res.ok) {
+                        alert("Producto creado con éxito");
+                        formProducto.reset();
+                        cargarProductos();
+                    } else {
+                        const err = await res.text();
+                        alert("Error al crear producto: " + err);
+                    }
+                } catch (error) {
+                    console.error("Error al crear producto:", error);
+                    alert("No se pudo crear el producto");
+                }
+            });
+
+            cargarProductos();
+        });
+    </script>
+</body>
+</html>

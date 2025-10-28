@@ -1,0 +1,173 @@
+/* ======== ESTILOS GLOBALES ======== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #fffaf5;
+  color: #333;
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  color: #4a2600;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* ======== NAVBAR ======== */
+.navbar {
+  background: linear-gradient(90deg, #ff9248, #ffb970);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 60px;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.navbar .logo {
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.navbar nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.navbar nav a:hover {
+  color: #222;
+}
+
+/* ======== SECCIÓN INICIO ======== */
+.inicio {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 100px 60px;
+  background: linear-gradient(135deg, #ffe5cc, #ffd4a3);
+  flex-wrap: wrap;
+}
+
+.inicio-texto {
+  max-width: 450px;
+}
+
+.inicio-texto h1 {
+  font-size: 2.6rem;
+  margin-bottom: 20px;
+}
+
+.inicio-texto p {
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+
+.btn-principal, .btn-vermas {
+  display: inline-block;
+  background: #ff9248;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-principal:hover, .btn-vermas:hover {
+  background: #ff7b00;
+  transform: scale(1.05);
+}
+
+.inicio-img img {
+  width: 380px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* ----- Sección de inicio ----- */
+.inicio {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
+  padding-bottom: 200px; /* espacio para la imagen del perro */
+  background: linear-gradient(to bottom, #fffaf4, #ffe7c7);
+  text-align: center;
+}
+
+.inicio-texto {
+  z-index: 2;
+  max-width: 600px;
+}
+
+.inicio-texto h2 {
+  font-size: 2.2rem;
+  color: #50301a;
+}
+
+.inicio-texto p {
+  font-size: 1.1rem;
+  margin: 10px 0 20px;
+  color: #6a4b32;
+}
+
+.btn-principal {
+  background: #ff914d;
+  color: white;
+  padding: 12px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-principal:hover {
+  background: #ff7b2f;
+}
+
+/* Imagen del perro centrada en la parte inferior */
+.inicio-img {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  max-width: 90%;
+  opacity: 0.95;
+}
+
+.inicio-img img {
+  width: 100%;
+  border-radius: 25px 25px 0 0;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* ----- Footer ----- */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #ff914d;
+  color: white;
+  font-weight: 500;
+}
