@@ -81,11 +81,11 @@
                 const data = await response.json();
                 console.log("Respuesta completa del servidor:", data); // DEBUG
 
-                // GUARDAR EN LOCALSTORAGE - VERSIÓN CORREGIDA
+                // GUARDAR EN LOCALSTORAGE 
                 const userData = {
                     email: data.email,
                     nombre: data.nombre,
-                    rol: data.iD_Rol  // ← Aquí guardamos el rol como "rol"
+                    rol: data.iD_Rol  
                 };
 
                 console.log("Guardando en localStorage:", userData); // DEBUG

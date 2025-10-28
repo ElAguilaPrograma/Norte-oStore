@@ -60,8 +60,7 @@
 
                 rightSection.insertBefore(logoutButton, rightSection.firstChild);
 
-                // CORRECCIÓN PRINCIPAL: Verificar el rol correctamente
-                // Usamos user.rol en lugar de user.ID_Rol
+                // Verificar Rol
                 if (user.rol === "Admin") {
                     adminLink.style.display = "inline-block";
                 } else {

@@ -249,7 +249,7 @@
                 }
             };
 
-            // Crear producto - MODIFICADO para usar FormData
+            // Crear producto 
             formProducto.addEventListener("submit", async (e) => {
                 e.preventDefault();
 
@@ -264,7 +264,7 @@
                     return;
                 }
 
-                // CAMBIO: Usar FormData en lugar de JSON
+                // Usar FormData en lugar de JSON
                 const formData = new FormData();
                 formData.append("nombre", nombre);
                 formData.append("precio", precio);
@@ -275,7 +275,7 @@
                 try {
                     const res = await fetch(`${API_URL}/crearnuevoproducto`, {
                         method: "POST",
-                        body: formData // CAMBIO: No usar headers Content-Type con FormData
+                        body: formData 
                     });
 
                     if (res.ok) {

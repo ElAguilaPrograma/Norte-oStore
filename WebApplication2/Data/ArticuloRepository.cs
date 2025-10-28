@@ -41,7 +41,6 @@ namespace WebApplication2.Data
 
         public async Task<Articulo?> GetByIdAsync(int id)
         {
-            // MODIFICADO: Incluir ImagenUrl en el SELECT
             var query = @"SELECT a.*, c.Nombre_Categoria 
                           FROM articulos a 
                           INNER JOIN categorias c ON a.ID_Categoria = c.ID_Categorias
@@ -62,7 +61,6 @@ namespace WebApplication2.Data
 
         public async Task<int> CreateAsync(Articulo articulo)
         {
-            // MODIFICADO: Incluir ImagenUrl en el INSERT
             var query = @"INSERT INTO articulos (Nombre_Articulo, Descripcion, Precio, Stock, ID_Categoria, ImagenUrl)
                           VALUES (@Nombre_Articulo, @Descripcion, @Precio, @Stock, @ID_Categoria, @ImagenUrl)";
 
@@ -72,7 +70,6 @@ namespace WebApplication2.Data
 
         public async Task<int> UpdateAsync(Articulo articulo)
         {
-            // MODIFICADO: Incluir ImagenUrl en el UPDATE
             var query = @"UPDATE articulos 
                           SET Nombre_Articulo = @Nombre_Articulo, 
                               Descripcion = @Descripcion, 
