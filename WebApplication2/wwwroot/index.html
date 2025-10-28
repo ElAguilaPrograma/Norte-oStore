@@ -14,13 +14,12 @@
             <img src="/Imagenes/El Norteño Store Vintage Sign.png" alt="El Norteño Store" width="150" height="500">
         </div>
         <nav>
-            <a href="admin.html" class="admin-link">Administrador</a>
+            <a href="admin.html" class="admin-link" style="color: #ff8c42; ">Administrador</a>
             <a href="categorias.html">Productos</a>
         </nav>
         <div class="right-section">
             <a href="Inicio de secion.html" class="register">👤 Iniciar sesión</a>
             <a href="tel:+5281030142" class="phone">📞 +52 8103 0142</a>
-            <a href="carrito (prueba).html" class="cart">🛒 Carrito</a>
         </div>
     </header>
 
@@ -80,6 +79,40 @@
             }
         });
     </script>
+
+    <!-- Carrito Flotante -->
+    <div class="carrito-flotante">
+        <button class="btn-carrito-flotante" onclick="toggleCarrito()">
+            🛒
+            <span class="contador-carrito" id="contadorCarrito">0</span>
+        </button>
+    </div>
+
+    <script src="Js/Carrito.js"></script>
+
+    <!-- Modal del Carrito -->
+    <div class="modal-overlay" id="modalOverlay" onclick="cerrarCarrito()"></div>
+
+    <div class="modal-carrito" id="modalCarrito">
+        <div class="carrito-header">
+            <h2>🛒 Tu Carrito</h2>
+            <button class="btn-cerrar-carrito" onclick="cerrarCarrito()">×</button>
+        </div>
+
+        <div class="carrito-content" id="carritoContent">
+            <!-- Los productos del carrito se cargan aquí -->
+        </div>
+
+        <div class="carrito-footer">
+            <div class="carrito-total">
+                <span>Total:</span>
+                <span class="total-precio" id="totalPrecio">$0.00</span>
+            </div>
+            <button class="btn-comprar" id="btnComprar" onclick="procesarCompra()">
+                Finalizar Compra
+            </button>
+        </div>
+    </div>
 
 </body>
 </html>

@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Css\" />
-    <Folder Include="wwwroot\Js\" />
   </ItemGroup>
 
 </Project>

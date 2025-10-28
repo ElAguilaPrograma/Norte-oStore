@@ -101,21 +101,21 @@
                         const row = document.createElement("tr");
                         row.dataset.id = p.iD_Articulo;
                         row.innerHTML = `
-                      <!-- NUEVO: Mostrar imagen en la tabla -->
-                      <td class="imagen">
-                        <img src="${p.imagenUrl || 'Imagenes/default.jpg'}"
-                             alt="${p.nombre_Articulo}"
-                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
-                      </td>
-                      <td class="nombre">${p.nombre_Articulo}</td>
-                      <td class="precio">${Number(p.precio || 0).toFixed(2)}</td>
-                      <td class="categoria">${p.categoria?.nombre_Categoria || "Sin categoría"}</td>
-                      <td class="stock">${Number(p.stock || 0)}</td>
-                      <td class="acciones">
-                        <button class="editar">Editar</button>
-                        <button class="borrar">Borrar</button>
-                      </td>
-                    `;
+                          <!-- NUEVO: Mostrar imagen en la tabla -->
+                          <td class="imagen">
+                            <img src="${p.imagenUrl || 'Imagenes/default.jpg'}"
+                                 alt="${p.nombre_Articulo}"
+                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                          </td>
+                          <td class="nombre">${p.nombre_Articulo}</td>
+                          <td class="precio">${Number(p.precio || 0).toFixed(2)}</td>
+                          <td class="categoria">${p.categoria?.nombre_Categoria || "Sin categoría"}</td>
+                          <td class="stock">${Number(p.stock || 0)}</td>
+                          <td class="acciones">
+                            <button class="editar">Editar</button>
+                            <button class="borrar">Borrar</button>
+                          </td>
+                        `;
                         tablaBody.appendChild(row);
                     });
 
@@ -163,21 +163,21 @@
 
                 // NUEVO: Campo para cambiar imagen en edición
                 row.querySelector(".imagen").innerHTML = `
-                      <div style="text-align: center;">
-                        <img src="${producto.imagenUrl || 'Imagenes/default.jpg'}"
-                             alt="${producto.nombre_Articulo}"
-                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; margin-bottom: 5px;">
-                        <br>
-                        <input type="file" accept="image/*" style="font-size: 12px;">
-                        <div style="font-size: 11px; color: #666;">Cambiar imagen</div>
-                      </div>
-                    `;
+                          <div style="text-align: center;">
+                            <img src="${producto.imagenUrl || 'Imagenes/default.jpg'}"
+                                 alt="${producto.nombre_Articulo}"
+                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; margin-bottom: 5px;">
+                            <br>
+                            <input type="file" accept="image/*" style="font-size: 12px;">
+                            <div style="font-size: 11px; color: #666;">Cambiar imagen</div>
+                          </div>
+                        `;
 
                 const acciones = row.querySelector(".acciones");
                 acciones.innerHTML = `
-                  <button class="guardar">Guardar</button>
-                  <button class="cancelar">Cancelar</button>
-                `;
+                      <button class="guardar">Guardar</button>
+                      <button class="cancelar">Cancelar</button>
+                    `;
 
                 acciones.querySelector(".cancelar").addEventListener("click", () => {
                     row.querySelector(".nombre").textContent = original.nombre;
@@ -295,5 +295,6 @@
             cargarProductos();
         });
     </script>
+
 </body>
 </html>
