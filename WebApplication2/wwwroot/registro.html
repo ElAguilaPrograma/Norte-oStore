@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - El Norteño Store</title>
+    <link rel="stylesheet" href="/Css/registro.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script type="text/javascript">
+function validar(idcampo, mensaje) {
+var cadena = document.getElementById(idcampo).value;
+var exp_reg  = /^[a-z\d\u00C0-\u00ff]+$/i; // expresión regular para letras(máy o minus), acentuadas o no, y números
+var verifica = exp_reg.test(cadena);
+if (verifica == true){
+//alert('ok');
+document.getElementById(mensaje).innerHTML = "Correcto";
+}else {
+//alert('error');
+document.getElementById(mensaje).innerHTML = "Incorrecto";
+return false;
+}
+}
+</script>
+</head>
+<body>
+    <!-- 🔹 ENCABEZADO -->
+    <header class="encabezado">
+        <div class="logo">🐾 El Norteño Store</div>
+        <a class="btn btn-primary" href="index.html" role="button">Inicio</a>
+    </header>
+
+    <!-- 🔹 CONTENIDO -->
+    <main class="registro-container">
+        <div class="card">
+            <h1>Regístrate</h1>
+
+            <form class="needs-validation" novalidate>
+                <div class="has-validation">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="name" placeholder="Nombre*" required required>
+                    <div class="valid-feedback">
+                        ¡Excelente!
+                    </div>
+                    <div class="invalid-feedback">
+                        Por favor, escribe el nombre
+                    </div>
+                </div>
+
+                <div class="has-validation">
+                    <label for="apellidoP">Apellido Paterno</label>
+                    <input type="text" id="apellidoP" placeholder="Apellido*" required minlength="3" maxlength="30">
+                    <div class="valid-feedback">
+                        ¡Excelente!
+                    </div>
+                    <div class="invalid-feedback">
+                        Por favor, escribir el apellido
+                    </div>
+                </div>
+
+                <div class="has-validation">
+                    <label for="apellidoM">Apellido Materno</label>
+                    <input type="text" id="apellidoM" placeholder="Apellido" optional minlength="3" maxlength="30" required>
+                </div>
+
+                <div class="has-validation">
+                    <label for="correo">Correo</label>
+                    <input type="email" id="correo" placeholder="Ejemplo@gmail.com*" required title="Correo Electronico">
+                    <div class="valid-feedback">
+                        ¡Excelente!
+                    </div>
+                    <div class="invalid-feedback">
+                        Por favor, escribir un correo
+                    </div>
+                </div>
+
+                <div class="has-validation">
+                    <label for="floatingPassword">Contraseña</label>
+                    <input type="password" class="form-control" id="floatingPassword" placeholder="Contraseña" required>
+                </div>
+                <div class="valid-feedback">
+                    Bien
+                </div>
+                <div class="invalid-feedback">
+                    Contraseña incorrecta
+                </div>
+                <div class="has-validation">
+                    <label for="confirmar">Confirmar Contraseña</label>
+                    <input type="password" id="confirmar" placeholder="Contraseña" required>
+                </div>
+                <div class="valid-feedback">
+                    Bien
+                </div>
+                <div class="invalid-feedback">
+                    Contraseña incorrecta
+                </div>
+                <button type="submit">Listo</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector(".needs-validation");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault(); // evitar recarga
+
+                if (!form.checkValidity()) {
+                    form.classList.add('was-validated');
+                    return;
+                }
+
+                // Obtener valores
+                const nombre = document.getElementById("name").value.trim();
+                const apellidoP = document.getElementById("apellidoP").value.trim();
+                const apellidoM = document.getElementById("apellidoM").value.trim();
+                const email = document.getElementById("correo").value.trim();
+                const password = document.getElementById("floatingPassword").value.trim();
+                const confirmar = document.getElementById("confirmar").value.trim();
+
+                // Validar que las contraseñas coincidan
+                if (password !== confirmar) {
+                    alert("Las contraseñas no coinciden");
+                    return;
+                }
+
+                // Concatenar nombre completo
+                const nombreCompleto = `${nombre} ${apellidoP} ${apellidoM}`.trim();
+
+                // Preparar objeto a enviar
+                const nuevoUsuario = {
+                    Nombre: nombreCompleto,
+                    Email: email,
+                    Password: password
+                };
+
+                try {
+                    const response = await fetch("https://localhost:7047/api/Usuario/register", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(nuevoUsuario)
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        alert(`Error: ${errorText}`);
+                        return;
+                    }
+
+                    alert("Usuario registrado correctamente");
+                    // Redirigir a login
+                    window.location.href = "Inicio de secion.html";
+
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("Ocurrió un error al registrar el usuario");
+                }
+            });
+        });
+    </script>
+
+
+</body>
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+(() => {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  const forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+})()
+</script>
+</html>

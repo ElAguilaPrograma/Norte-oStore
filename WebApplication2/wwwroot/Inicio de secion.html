@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="/Css/Sesion.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>Norteñito Store</h1>
+            <p>Ingresa a tu cuenta</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Ingresa tu correo</label>
+                <input type="email" id="username" placeholder="Ingresa tu email" required title="Correo Electronico">
+            </div>
+
+            <div class="input-group">
+                <label for="field">Contraseña</label>
+                <input type="password" id="field" placeholder="Contraseña" required">
+            </div>
+
+            <div class="show-password">
+                <label>
+                    Mostrar Contraseña:
+                    <input type="checkbox" onclick="showPwd()">
+                </label>
+            </div>
+
+            <button type="submit" class="login-btn">Iniciar Sesión</button>
+        </form>
+
+        <div class="register-link">
+            ¿No tienes una cuenta? <a href="registro.html" id="registerLink">Regístrate</a>
+        </div>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        // Mostrar / ocultar contraseña
+        const showPwd = () => {
+            let input = document.querySelector("#field");
+            input.type = input.type === "password" ? "text" : "password";
+        };
+
+        // Escuchar el envío del formulario
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById("username").value.trim();
+            const password = document.getElementById("field").value.trim();
+            const messageDiv = document.getElementById("message");
+
+            if (!email || !password) {
+                messageDiv.textContent = "Por favor, ingresa tus datos.";
+                messageDiv.style.color = "red";
+                return;
+            }
+
+            try {
+                const response = await fetch("https://localhost:7047/api/Usuario/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    messageDiv.textContent = errorText;
+                    messageDiv.style.color = "red";
+                    return;
+                }
+
+                const data = await response.json();
+                console.log("Respuesta completa del servidor:", data); // DEBUG
+
+                // GUARDAR EN LOCALSTORAGE - VERSIÓN CORREGIDA
+                const userData = {
+                    email: data.email,
+                    nombre: data.nombre,
+                    rol: data.iD_Rol  // ← Aquí guardamos el rol como "rol"
+                };
+
+                console.log("Guardando en localStorage:", userData); // DEBUG
+                localStorage.setItem("usuario", JSON.stringify(userData));
+
+                // Verificar que se guardó correctamente
+                const storedUser = JSON.parse(localStorage.getItem("usuario"));
+                console.log("Leído de localStorage:", storedUser); // DEBUG
+
+                messageDiv.textContent = `${data.mensaje}`;
+                messageDiv.style.color = "green";
+
+                // Redirección
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 100);
+
+            } catch (error) {
+                console.error("Error:", error);
+                messageDiv.textContent = "Error de conexión con el servidor.";
+                messageDiv.style.color = "red";
+            }
+        });
+    </script>
+
+</body>
+</html>

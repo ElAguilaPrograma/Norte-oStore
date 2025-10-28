@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Norteño Store</title>
+    <link rel="stylesheet" href="/Css/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img src="/Imagenes/El Norteño Store Vintage Sign.png" alt="El Norteño Store" width="150" height="500">
+        </div>
+        <nav>
+            <a href="admin.html" class="admin-link">Administrador</a>
+            <a href="categorias.html">Productos</a>
+        </nav>
+        <div class="right-section">
+            <a href="Inicio de secion.html" class="register">👤 Iniciar sesión</a>
+            <a href="tel:+5281030142" class="phone">📞 +52 8103 0142</a>
+            <a href="carrito (prueba).html" class="cart">🛒 Carrito</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="text-content">
+            <h1>Buscas los<br><span>mejores<br>productos</span><br>para tu mascota?</h1>
+            <p>Aprovecha nuestras promociones<br>y ofertas en nuestra página web</p>
+            <a href="productos.html" class="btn-vermas">Ver más</a>
+        </div>
+        <div class="image-content">
+            <img src="Imagenes/Perro2.png" alt="Perro feliz" height="650" width="700" style="float: left; margin-right: 10px;">
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = JSON.parse(localStorage.getItem("usuario"));
+
+            const loginLink = document.querySelector(".register");
+            const adminLink = document.querySelector('nav a[href="admin.html"]');
+            const cartLink = document.querySelector(".cart");
+
+            if (user) {
+                // Ocultar botón de login
+                loginLink.style.display = "none";
+
+                // Mostrar saludo y botón de cerrar sesión
+                const rightSection = document.querySelector(".right-section");
+                const logoutButton = document.createElement("a");
+                logoutButton.href = "#";
+                logoutButton.textContent = `👋 Hola, ${user.nombre} (Salir)`;
+                logoutButton.classList.add("logout");
+
+                logoutButton.addEventListener("click", () => {
+                    localStorage.removeItem("usuario");
+                    location.reload();
+                });
+
+                rightSection.insertBefore(logoutButton, rightSection.firstChild);
+
+                // CORRECCIÓN PRINCIPAL: Verificar el rol correctamente
+                // Usamos user.rol en lugar de user.ID_Rol
+                if (user.rol === "Admin") {
+                    adminLink.style.display = "inline-block";
+                } else {
+                    adminLink.style.display = "none";
+                }
+
+                // Mostrar carrito si hay sesión
+                cartLink.style.display = "inline-block";
+
+            } else {
+                // Si no hay sesión
+                loginLink.style.display = "inline-block";
+                adminLink.style.display = "none";
+                cartLink.style.display = "none";
+            }
+        });
+    </script>
+
+</body>
+</html>

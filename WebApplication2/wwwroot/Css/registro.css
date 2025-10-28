@@ -1,0 +1,138 @@
+/* -------- CONFIGURACIÓN GENERAL -------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f7d9aa, #f9b16e);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* -------- ENCABEZADO -------- */
+.encabezado {
+    width: 100%;
+    background: linear-gradient(90deg, #ff8c42, #ffb86b);
+    color: white;
+    text-align: center;
+    padding: 18px 0;
+    font-size: 1.4em;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.logo {
+    letter-spacing: 1px;
+}
+
+/* -------- CONTENEDOR PRINCIPAL -------- */
+.registro-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 40px 20px;
+}
+
+/* -------- TARJETA DEL FORMULARIO -------- */
+.card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px 32px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    width: 320px;
+    text-align: center;
+    animation: fadeIn 1s ease;
+}
+
+/* -------- TÍTULO -------- */
+.card h1 {
+    color: #333;
+    font-weight: 700;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+/* -------- CAMPOS -------- */
+.has-validation {
+    text-align: left;
+    margin-bottom: 14px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #444;
+    font-size: 0.9em;
+}
+
+input {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1.8px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9em;
+    transition: 0.3s;
+    background-color: #fdfdfd;
+}
+
+input:focus {
+    border-color: #ff8c42;
+    outline: none;
+    box-shadow: 0 0 6px rgba(255, 140, 66, 0.4);
+}
+
+/* -------- BOTÓN -------- */
+button {
+    width: 100%;
+    background-color: #ff8c42;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #e6732b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 140, 66, 0.3);
+}
+
+/* -------- ANIMACIÓN -------- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* -------- RESPONSIVE -------- */
+@media (max-width: 400px) {
+    .card {
+        width: 90%;
+        padding: 25px 20px;
+    }
+    .card h1 {
+        font-size: 1.6em;
+    }
+    .encabezado {
+        font-size: 1.2em;
+        padding: 15px 0;
+    }
+}

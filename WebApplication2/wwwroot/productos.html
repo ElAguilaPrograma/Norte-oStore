@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - El Norteño Store</title>
+    <link rel="stylesheet" href="/Css/productos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- 🔹 ENCABEZADO -->
+    <header class="encabezado">
+        <div class="logo">🐾 El Norteño Store</div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="categorias.html" class="activo">Productos</a>
+        </nav>
+    </header>
+
+    <!-- 🔹 TOP 3 PRODUCTOS ALEATORIOS -->
+    <section class="productos-section">
+        <h1>PRODUCTOS DESTACADOS</h1>
+
+        <div class="productos-container" id="productosContainer">
+            <!-- Los productos se cargan dinámicamente -->
+            <p>Cargando productos...</p>
+        </div>
+    </section>
+
+    <!-- 🔹 CUIDADO RESPONSABLE -->
+    <section class="cuidado-section">
+        <div class="cuidado-imagen">
+            <img src="Imagenes/Captura de pantalla 2025-10-16 131335.png" alt="Animales">
+        </div>
+
+        <div class="cuidado-texto">
+            <h2>Cuidado responsable de los animales</h2>
+            <p>
+                Tener una mascota es una gran alegría, pero también una responsabilidad. Todos los animales, desde perros y gatos hasta aves o pequeños roedores, necesitan una alimentación adecuada, revisiones veterinarias periódicas y mucho cariño.
+            </p>
+            <p>
+                Además, es importante brindarles un ambiente limpio, seguro y con estímulos que les permitan desarrollarse física y mentalmente.
+            </p>
+            <p><strong>Recuerda:</strong> una mascota sana y feliz es parte de una familia feliz.</p>
+        </div>
+    </section>
+
+    <!-- 🔹 FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Contacto</h3>
+                <p>Calle Principal 123, Ciudad</p>
+                <p>📞 +52 8123456789</p>
+                <p>✉️ elnortenostore@gmail.com</p>
+                <p>Lun - Sáb: 9:00 - 20:00</p>
+            </div>
+
+            <div class="footer-col">
+                <h3>Categorías</h3>
+                <ul>
+                    <li>Perros</li>
+                    <li>Gatos</li>
+                    <li>Aves</li>
+                    <li>Roedores</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Servicios</h3>
+                <ul>
+                    <li>Delivery</li>
+                    <li>Promociones</li>
+                    <li>Asesoría</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Síguenos</h3>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Instagram</li>
+                    <li>Twitter</li>
+                    <li>YouTube</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 El Norteño Store | Todos los derechos reservados
+        </div>
+    </footer>
+
+    <script>
+    // Función para obtener productos aleatorios
+    function obtenerProductosAleatorios(productos, cantidad = 3) {
+      // Mezclar el array de productos
+      const productosMezclados = [...productos].sort(() => Math.random() - 0.5);
+
+      // Tomar los primeros 'cantidad' productos
+      return productosMezclados.slice(0, cantidad);
+    }
+
+    // Función para agregar al carrito (la misma que en catalogo.html)
+    function agregarAlCarrito(event) {
+      const boton = event.target;
+      const producto = {
+        id: boton.dataset.id,
+        nombre: boton.dataset.nombre,
+        precio: parseFloat(boton.dataset.precio),
+        imagen: boton.dataset.imagen,
+        cantidad: 1
+      };
+
+      // Obtener carrito actual de localStorage
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+      // Verificar si el producto ya está en el carrito
+      const productoExistente = carrito.find(item => item.id === producto.id);
+
+      if (productoExistente) {
+        productoExistente.cantidad += 1;
+      } else {
+        carrito.push(producto);
+      }
+
+      // Guardar en localStorage
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+
+      // Feedback visual
+      boton.textContent = '✓ Añadido';
+      boton.style.backgroundColor = '#28a745';
+
+      setTimeout(() => {
+        boton.textContent = 'AGREGAR AL CARRITO';
+        boton.style.backgroundColor = '';
+      }, 1500);
+
+      console.log('Producto añadido:', producto);
+      console.log('Carrito actual:', carrito);
+    }
+
+    // Función para mostrar los productos
+    function mostrarProductosAleatorios(productos) {
+      const container = document.getElementById('productosContainer');
+
+      if (productos.length === 0) {
+        container.innerHTML = '<p>No hay productos disponibles en este momento.</p>';
+        return;
+      }
+
+      const productosAleatorios = obtenerProductosAleatorios(productos, 3);
+
+      container.innerHTML = productosAleatorios.map(producto => `
+        <div class="producto-card">
+          <img src="${producto.imagenUrl || 'Imagenes/default.jpg'}" alt="${producto.nombre_Articulo}">
+          <h3>${producto.nombre_Articulo}</h3>
+          <p class="precio">$${Number(producto.precio).toFixed(2)}</p>
+          <button class="btn-carrito"
+                  data-id="${producto.iD_Articulo}"
+                  data-nombre="${producto.nombre_Articulo}"
+                  data-precio="${producto.precio}"
+                  data-imagen="${producto.imagenUrl || 'Imagenes/default.jpg'}">
+            AGREGAR AL CARRITO
+          </button>
+        </div>
+      `).join('');
+
+      // Agregar eventos a los botones del carrito
+      document.querySelectorAll('.btn-carrito').forEach(btn => {
+        btn.addEventListener('click', agregarAlCarrito);
+      });
+    }
+
+    // Cargar productos cuando la página esté lista
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const API_URL = "https://localhost:7047/api/Productos";
+        const response = await fetch(`${API_URL}/mostrarproductos`);
+
+        if (!response.ok) {
+          throw new Error('Error al cargar productos');
+        }
+
+        const productos = await response.json();
+        mostrarProductosAleatorios(productos);
+
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('productosContainer').innerHTML =
+          '<p>Error al cargar los productos. Intenta más tarde.</p>';
+      }
+    });
+
+    // Función para recargar productos aleatorios (opcional)
+    function recargarProductos() {
+      const container = document.getElementById('productosContainer');
+      container.innerHTML = '<p>Cargando nuevos productos...</p>';
+
+      // Simular un pequeño delay para mejor UX
+      setTimeout(async () => {
+        try {
+          const API_URL = "https://localhost:7047/api/Productos";
+          const response = await fetch(`${API_URL}/mostrarproductos`);
+          const productos = await response.json();
+          mostrarProductosAleatorios(productos);
+        } catch (error) {
+          console.error('Error:', error);
+          container.innerHTML = '<p>Error al cargar los productos.</p>';
+        }
+      }, 500);
+    }
+
+    </script>
+
+</body>
+</html>
