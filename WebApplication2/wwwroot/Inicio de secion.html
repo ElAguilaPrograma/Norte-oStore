@@ -73,6 +73,7 @@
 
                 if (!response.ok) {
                     const errorText = await response.text();
+                    alert("Correo o contraseña incorrectos");
                     messageDiv.textContent = errorText;
                     messageDiv.style.color = "red";
                     return;

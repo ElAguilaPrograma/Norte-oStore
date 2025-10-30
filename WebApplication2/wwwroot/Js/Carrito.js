@@ -31,10 +31,25 @@ function actualizarContadorCarrito() {
     document.getElementById('contadorCarrito').textContent = totalItems;
 }
 
+// Calcular precios (subtotal, IVA y total)
+function calcularPrecios(carrito) {
+    const subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+    const iva = subtotal * 0.16; // 16% de IVA
+    const total = subtotal + iva;
+
+    return {
+        subtotal: subtotal,
+        iva: iva,
+        total: total
+    };
+}
+
 // Actualizar vista del carrito
 function actualizarCarrito() {
     const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     const carritoContent = document.getElementById('carritoContent');
+    const subtotalPrecio = document.getElementById('subtotalPrecio');
+    const ivaPrecio = document.getElementById('ivaPrecio');
     const totalPrecio = document.getElementById('totalPrecio');
     const btnComprar = document.getElementById('btnComprar');
 
@@ -46,26 +61,31 @@ function actualizarCarrito() {
                 <p style="font-size: 14px; color: #999;">Agrega algunos productos desde el catálogo</p>
             </div>
         `;
-        totalPrecio.textContent = '$0.00';
+        subtotalPrecio.textContent = '$0.00 MXN';
+        ivaPrecio.textContent = '$0.00 MXN';
+        totalPrecio.textContent = '$0.00 MXN';
         btnComprar.disabled = true;
         return;
     }
 
-    let total = 0;
+    // Calcular precios
+    const precios = calcularPrecios(carrito);
+
+    // Mostrar productos
     carritoContent.innerHTML = carrito.map(item => {
-        const subtotal = item.precio * item.cantidad;
-        total += subtotal;
+        const subtotalItem = item.precio * item.cantidad;
 
         return `
             <div class="carrito-item">
                 <img src="${item.imagen}" alt="${item.nombre}" class="carrito-item-img">
                 <div class="carrito-item-info">
                     <div class="carrito-item-nombre">${item.nombre}</div>
-                    <div class="carrito-item-precio">$${item.precio.toFixed(2)}</div>
+                    <div class="carrito-item-precio">$${item.precio.toFixed(2)} MXN</div>
                     <div class="carrito-item-cantidad">
                         <button class="btn-cantidad" onclick="cambiarCantidad('${item.id}', -1)">-</button>
                         <span class="cantidad-numero">${item.cantidad}</span>
                         <button class="btn-cantidad" onclick="cambiarCantidad('${item.id}', 1)">+</button>
+                        <span class="subtotal-item">$${subtotalItem.toFixed(2)} MXN</span>
                     </div>
                 </div>
                 <button class="btn-eliminar" onclick="eliminarDelCarrito('${item.id}')">🗑️</button>
@@ -73,7 +93,10 @@ function actualizarCarrito() {
         `;
     }).join('');
 
-    totalPrecio.textContent = `$${total.toFixed(2)}`;
+    // Actualizar precios en el footer
+    subtotalPrecio.textContent = `$${precios.subtotal.toFixed(2)} MXN`;
+    ivaPrecio.textContent = `$${precios.iva.toFixed(2)} MXN`;
+    totalPrecio.textContent = `$${precios.total.toFixed(2)} MXN`;
     btnComprar.disabled = false;
 }
 
@@ -113,9 +136,19 @@ function procesarCompra() {
         return;
     }
 
-    const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+    const precios = calcularPrecios(carrito);
 
-    if (confirm(`¿Confirmar compra por $${total.toFixed(2)}?`)) {
+    const mensajeConfirmacion = `
+¿Confirmar compra?
+
+Subtotal: $${precios.subtotal.toFixed(2)} MXN
+IVA (16%): $${precios.iva.toFixed(2)} MXN
+Total: $${precios.total.toFixed(2)} MXN
+
+¿Deseas continuar?
+    `.trim();
+
+    if (confirm(mensajeConfirmacion)) {
         // Aquí puedes integrar con tu sistema de pagos
         alert('¡Compra realizada con éxito! Gracias por tu compra.');
         localStorage.removeItem('carrito');

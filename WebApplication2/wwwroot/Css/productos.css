@@ -478,3 +478,71 @@ button:hover {
         display: block;
     }
 
+
+/* ===== DESGLOSE DE PRECIOS EN CARRITO ===== */
+.carrito-desglose {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
+
+.desglose-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.desglose-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid #eee;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.subtotal-precio,
+.iva-precio,
+.total-precio {
+    font-weight: 600;
+}
+
+.subtotal-precio {
+    color: #666;
+}
+
+.iva-precio {
+    color: #ff7b00;
+}
+
+.total-precio {
+    color: #ff7b00;
+    font-size: 20px;
+}
+
+/* Subtotal por item */
+.subtotal-item {
+    font-size: 12px;
+    color: #666;
+    margin-left: 10px;
+    font-weight: 600;
+}
+
+/* Ajuste del footer del carrito */
+.carrito-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 20px;
+    border-top: 1px solid #eee;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+

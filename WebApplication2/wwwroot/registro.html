@@ -38,7 +38,7 @@ return false;
             <form class="needs-validation" novalidate>
                 <div class="has-validation">
                     <label for="nombre">Nombre</label>
-                    <input type="text" id="name" placeholder="Nombre*" required required>
+                    <input type="text" id="name" placeholder="Nombre*" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$">
                     <div class="valid-feedback">
                         ¡Excelente!
                     </div>
@@ -49,7 +49,7 @@ return false;
 
                 <div class="has-validation">
                     <label for="apellidoP">Apellido Paterno</label>
-                    <input type="text" id="apellidoP" placeholder="Apellido*" required minlength="3" maxlength="30">
+                    <input type="text" id="apellidoP" placeholder="Apellido*" required minlength="3" maxlength="30" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$">
                     <div class="valid-feedback">
                         ¡Excelente!
                     </div>
@@ -60,7 +60,13 @@ return false;
 
                 <div class="has-validation">
                     <label for="apellidoM">Apellido Materno</label>
-                    <input type="text" id="apellidoM" placeholder="Apellido" optional minlength="3" maxlength="30" required>
+                    <input type="text" id="apellidoM" placeholder="Apellido" optional minlength="3" maxlength="30" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$">
+                </div>
+                <div class="valid-feedback">
+                    ¡Excelente!
+                </div>
+                <div class="invalid-feedback">
+                    Por favor, escribir el apellido
                 </div>
 
                 <div class="has-validation">
@@ -100,6 +106,11 @@ return false;
     </main>
 
     <script>
+
+        function soloLetras(texto) {
+            return /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(texto);
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             const form = document.querySelector(".needs-validation");
 
@@ -118,6 +129,11 @@ return false;
                 const email = document.getElementById("correo").value.trim();
                 const password = document.getElementById("floatingPassword").value.trim();
                 const confirmar = document.getElementById("confirmar").value.trim();
+
+                if (!soloLetras(nombre) || !soloLetras(apellidoP) || !soloLetras(apellidoM)) {
+                    alert("El nombre y los apellidos deben contener solo letras.");
+                    return;
+                }
 
                 // Validar que las contraseñas coincidan
                 if (password !== confirmar) {
