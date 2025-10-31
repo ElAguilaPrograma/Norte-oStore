@@ -2,6 +2,7 @@
 
 // Alternar visibilidad del carrito
 function toggleCarrito() {
+
     const modal = document.getElementById('modalCarrito');
     const overlay = document.getElementById('modalOverlay');
 

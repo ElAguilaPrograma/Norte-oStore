@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 using WebApplication2.Data;
 using WebApplication2.DTO;
 using WebApplication2.Models;
@@ -22,6 +23,13 @@ namespace WebApplication2.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UsuarioRegisterRequest request)
         {
+
+            // Validar que el nombre solo contenga letras
+            if (string.IsNullOrWhiteSpace(request.Nombre) || !Regex.IsMatch(request.Nombre, @"^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"))
+            {
+                return BadRequest("El nombre y los apellidos deben contener solo letras y espacios válidos.");
+            }
+
             if (request == null)
             {
                 return BadRequest("Datos invalidos");
